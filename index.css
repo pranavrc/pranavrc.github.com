@@ -41,6 +41,7 @@ h1 {
 	font-weight: bold;
 	color: #666;
 	text-align: center;
+	text-shadow: hsla(0,0%,40%,0.5) 0 2px 0, hsla(0,0%,100%,.6) 0 2px 1px;
 }
 
 #footer {
