@@ -75,7 +75,7 @@ li:last-child {
 li a {
 	text-decoration: none;
 	color: #000;
-	display: block;
+	/*display: block;*/
 	width: 100%;
  	-webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
     -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
@@ -87,4 +87,12 @@ li a {
 li a:hover {
     font-size: 18px;
     /*background: #f6f6f6;*/
+}
+
+i#quote {
+	font-size: 10px;
+}
+
+i a {
+	text-decoration: none;
 }
