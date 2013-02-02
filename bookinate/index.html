@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Bookinator.</title>
+		<title>Bookinate.</title>
 		<link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="./index.css" rel="stylesheet" media="screen">
 		<script src="./jquery-1.7.2.js"></script>
@@ -10,10 +10,11 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Bookinator.</h1>
+			<h1>Bookinate.</h1>
 			<textarea class="title input-xxlarge" rows="1" placeholder="Book Cover."></textarea><br />
 			<textarea class="textcontent input-xxlarge" rows="18" placeholder="Book Content."></textarea><br />
-			<button class="btn btn-large btn-primary" type="button">Bookinate.</button><br />
+			<button class="bookinate btn btn-large btn-primary" type="button">Bookinate.</button>
+			<button class="pagebreaks btn btn-large btn-primary" type="button">Insert Page Break.</button><br />
 		</div>
 
 		<div id="bookcontainer">
@@ -24,9 +25,10 @@
 
 		<script>
 			var noOfPages;
+			var delimiter = "<pagebreak>"
 
 			$(document).ready(function() {
-				$('button.btn.btn-large.btn-primary').click(function() {
+				$('.bookinate').click(function() {
 					$('#book').unbind();
 					$('#book').remove();
 					$('#bookcontainer div').empty();
@@ -34,7 +36,7 @@
 					var title = $('textarea.title').val();
 					var text = $('textarea.textcontent').val();
 
-					var pageContents = text.split("----");
+					var pageContents = text.split(delimiter);
 					$('.container').remove();
 
 					$('#bookcontainer').html('<div id="book"></div>');
@@ -65,14 +67,56 @@
 						gradients: !$.isTouch
 					});
 
-					$(document).bind('keydown', function(e){
-						if (e.target && e.target.tagName.toLowerCase()!='input')
-							if (e.keyCode==37)
+					$(document).bind('keydown', function(key){
+						if (key.target && key.target.tagName.toLowerCase() != 'input')
+							if (key.keyCode==37)
 								$('#book').turn('previous');
-							else if (e.keyCode==39)
+							else if (key.keyCode==39)
 								$('#book').turn('next');
 					});
 
+				});
+				
+				// stackoverflow credits for getCursorPosition(): http://stackoverflow.com/q/1891444
+				(function ($, undefined) {
+	    			$.fn.getCursorPosition = function() {
+    			    	var el = $(this).get(0);
+				        var pos = 0;
+				        if('selectionStart' in el) {
+				            pos = el.selectionStart;
+				        } else if('selection' in document) {
+			    	        el.focus();
+			        	    var Sel = document.selection.createRange();
+			            	var SelLength = document.selection.createRange().text.length;
+				            Sel.moveStart('character', -el.value.length);
+				            pos = Sel.text.length - SelLength;
+				        }
+				        return pos;
+			    	}
+				})(jQuery);
+				
+				function insertTextAtPosition(elementClass, textToInsert) {
+					var element = $(elementClass);
+				    var scrollPosition = element.scrollTop;
+				    var caretPosition = 0;
+					
+					caretPosition = element.getCursorPosition();
+					
+					var preceding = (element.val()).substring(0, caretPosition);  
+					var succeeding = (element.val()).substring(caretPosition, element.val().length); 
+					
+					element.val(preceding + textToInsert + succeeding);
+				    caretPosition = caretPosition + textToInsert.length;
+		
+				    element.selectionStart = caretPosition;
+				    element.selectionEnd = caretPosition;
+				    element.focus();
+					
+					element.scrollTop = scrollPosition;
+				}
+				
+				$('.pagebreaks').click(function() {
+					insertTextAtPosition('textarea.textcontent', delimiter);
 				});
 			});
 		</script>
