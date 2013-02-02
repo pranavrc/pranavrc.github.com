@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bookinator.</title>
+		<link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="./index.css" rel="stylesheet" media="screen">
+		<script src="./jquery-1.7.2.js"></script>
+		<script src="./bootstrap/js/bootstrap.min.js"></script>
+		<script src="./turn.js/turn.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Bookinator.</h1>
+			<textarea class="title input-xxlarge" rows="1" placeholder="Book Cover."></textarea><br />
+			<textarea class="textcontent input-xxlarge" rows="18" placeholder="Book Content."></textarea><br />
+			<button class="btn btn-large btn-primary" type="button">Bookinate.</button><br />
+		</div>
+
+		<div id="bookcontainer">
+		</div>
+
+		<div id="pagesource">
+		</div>
+
+		<script>
+			var noOfPages;
+
+			$(document).ready(function() {
+				$('button.btn.btn-large.btn-primary').click(function() {
+					$('#book').unbind();
+					$('#book').remove();
+					$('#bookcontainer div').empty();
+
+					var title = $('textarea.title').val();
+					var text = $('textarea.textcontent').val();
+
+					var pageContents = text.split("----");
+					$('.container').remove();
+
+					$('#bookcontainer').html('<div id="book"></div>');
+					$('#book').html('<div class="binding">' + title + '</div>');
+
+					noOfPages = pageContents.length + 2;
+
+					for (var eachPage = 0; eachPage < noOfPages; eachPage++) {
+						if (eachPage == 0 || eachPage == noOfPages - 1) { 
+							if (eachPage == 0) {
+								$('#book').append('<div class="content"></div>');
+							} else if(eachPage == noOfPages - 1 && eachPage % 2 == 0) {
+								$('#book').append('<div class="content"></div>');
+							}
+							continue;
+						}
+
+						$('#book').append('<div class="content">' + pageContents[eachPage - 1] + '</div>');
+					}
+
+					$('#pagesource').text('<!DOCTYPE html><html>' + document.getElementsByTagName('html')[0].innerHTML + '</html>');
+
+					$('#book').turn({
+						autoCenter: true,
+						acceleration: true,
+						pages: noOfPages,
+						elevation: 50,
+						gradients: !$.isTouch
+					});
+
+					$(document).bind('keydown', function(e){
+						if (e.target && e.target.tagName.toLowerCase()!='input')
+							if (e.keyCode==37)
+								$('#book').turn('previous');
+							else if (e.keyCode==39)
+								$('#book').turn('next');
+					});
+
+				});
+			});
+		</script>
+	</body>
+</html>
