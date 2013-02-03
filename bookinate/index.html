@@ -18,14 +18,14 @@
 		</div>
 
 		<div id="bookcontainer">
-		</div>
+		</div><br />
 
-		<div id="pagesource">
+		<div id="reloadbtn">
 		</div>
 
 		<script>
 			var noOfPages;
-			var delimiter = "<pagebreak>"
+			var delimiter = '<pagebreak>';
 
 			$(document).ready(function() {
 				$('.bookinate').click(function() {
@@ -45,7 +45,7 @@
 					noOfPages = pageContents.length + 2;
 
 					for (var eachPage = 0; eachPage < noOfPages; eachPage++) {
-						if (eachPage == 0 || eachPage == noOfPages - 1) { 
+						if (eachPage == 0 || eachPage == noOfPages - 1) {
 							if (eachPage == 0) {
 								$('#book').append('<div class="content"></div>');
 							} else if(eachPage == noOfPages - 1 && eachPage % 2 == 0) {
@@ -57,7 +57,7 @@
 						$('#book').append('<div class="content">' + pageContents[eachPage - 1] + '</div>');
 					}
 
-					$('#pagesource').text('<!DOCTYPE html><html>' + document.getElementsByTagName('html')[0].innerHTML + '</html>');
+					$('#reloadbtn').html('<button id="reload" type="button">Go back.</button><button id="source" type="button">View Source.</button>');
 
 					$('#book').turn({
 						autoCenter: true,
@@ -67,7 +67,15 @@
 						gradients: !$.isTouch
 					});
 
-					$(document).bind('keydown', function(key){
+					$('#reload').click(function() {
+						document.location.reload();
+					});
+
+					$('#source').click(function() {
+						window.prompt('Copy to Clipboard, Ctrl+C and Enter', '<!DOCTYPE html><html>' + document.getElementsByTagName('html')[0].innerHTML + '</html>');
+					});
+
+					$(document).bind('keydown', function(key) {
 						if (key.target && key.target.tagName.toLowerCase() != 'input')
 							if (key.keyCode==37)
 								$('#book').turn('previous');
@@ -76,7 +84,7 @@
 					});
 
 				});
-				
+
 				// stackoverflow credits for getCursorPosition(): http://stackoverflow.com/q/1891444
 				(function ($, undefined) {
 	    			$.fn.getCursorPosition = function() {
@@ -94,27 +102,27 @@
 				        return pos;
 			    	}
 				})(jQuery);
-				
+
 				function insertTextAtPosition(elementClass, textToInsert) {
 					var element = $(elementClass);
 				    var scrollPosition = element.scrollTop;
 				    var caretPosition = 0;
-					
+
 					caretPosition = element.getCursorPosition();
-					
-					var preceding = (element.val()).substring(0, caretPosition);  
-					var succeeding = (element.val()).substring(caretPosition, element.val().length); 
-					
+
+					var preceding = (element.val()).substring(0, caretPosition);
+					var succeeding = (element.val()).substring(caretPosition, element.val().length);
+
 					element.val(preceding + textToInsert + succeeding);
 				    caretPosition = caretPosition + textToInsert.length;
-		
+
 				    element.selectionStart = caretPosition;
 				    element.selectionEnd = caretPosition;
 				    element.focus();
-					
+
 					element.scrollTop = scrollPosition;
 				}
-				
+
 				$('.pagebreaks').click(function() {
 					insertTextAtPosition('textarea.textcontent', delimiter);
 				});
