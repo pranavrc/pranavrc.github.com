@@ -27,6 +27,9 @@ def addQuote(quote, author, link):
 	with open('./parrot.json', 'w') as parrot:
 		json.dump(quotes, parrot)
 
+	with open('./backup.json', 'w') as backup:
+		json.dump(quotes, backup)
+
 if __name__ == "__main__":
 	quote = str(raw_input("Quote: "))
 	author = str(raw_input("Author: "))
