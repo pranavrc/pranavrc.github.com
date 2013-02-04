@@ -26,7 +26,7 @@
 			}
 
 			#book .turn-page{
-				background-color:white;
+				background-color: white;
 			}
 
 			#book .binding {
@@ -36,6 +36,16 @@
 				line-height: 500px;
 				margin: 0px;
 				color: white;
+			}
+
+			#reload {
+				background: #666;
+				padding: 5px 10px;
+				color: #fff;
+				border-radius: 5px;
+				-moz-border-radius: 5px;
+				-webkit-border-radius: 5px;
+				border: 1px solid #666;
 			}
 
 		</style>
@@ -91,7 +101,7 @@
 						$('#book').append('<div class="content">' + pageContents[eachPage - 1] + '</div>');
 					}
 
-					$('#reloadpage').html('<p>Use left/right arrow keys or click and drag the corners to turn pages.</p><br /><a href="">Back</a><br />'/*<button id="reload" type="button">Go back.</button><button id="source" type="button">View Source.</button>'*/);
+					$('#reloadpage').html('<p>Use left/right arrow keys or click and drag the corners to turn pages.</p><br /><button id="reload" type="button">Go back.</button>'/*<button id="source" type="button">View Source.</button>'*/);
 
 					$('#book').turn({
 						autoCenter: true,
@@ -101,11 +111,12 @@
 						gradients: !$.isTouch
 					});
 
-					/*$('#reload').click(function() {
-						document.location.reload();
+					$('#reload').click(function() {
+						if(window.prompt('To copy book content to clipboard before reloading, press Ctrl+C.', text))
+							document.location.reload();
 					});
 
-					$('#source').click(function() {
+					/*$('#source').click(function() {
 						window.prompt('Copy to Clipboard, Ctrl+C and Enter', '<!DOCTYPE html><html>' + document.getElementsByTagName('html')[0].innerHTML + '</html>');
 					});*/
 
@@ -116,7 +127,7 @@
 							else if (key.keyCode == 39)
 								$('#book').turn('next');
 					});
-
+					
 				});
 
 				// stackoverflow credits for getCursorPosition(): http://stackoverflow.com/q/1891444
