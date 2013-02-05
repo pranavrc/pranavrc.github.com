@@ -112,7 +112,8 @@
 					});
 
 					$('#reload').click(function() {
-						if(window.prompt('To copy book content to clipboard before reloading, press Ctrl+C.', text))
+						var reloadOrNot = window.prompt('To copy book contents to clipboard before reloading, press Ctrl+C.', text);
+						if (reloadOrNot != null)
 							document.location.reload();
 					});
 
