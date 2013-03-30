@@ -4,7 +4,12 @@ var global = (function () {
 	return {
 		submitForm: function () {
 			content = document.getElementById("urlText").value;
-			this.isSearchUrl(content);
+
+			if (this.isValidUrl(content) && this.isSearchUrl(content)) {
+				alert("Valid Search Url.");
+			} else {
+				alert("Not a valid Search Url.");
+			}
 		},
 
 		isSearchUrl: function () {
@@ -19,10 +24,16 @@ var global = (function () {
 							return (param == "null") ? false: param;
 						}
 						)) {
-				alert('Is Search Url');
+				return true;
 			} else {
-				alert('Not Search Url');
+				return false;
 			}
+		},
+
+		isValidUrl: function (url) {
+			var urlRe = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+			return urlRe.test(url);
 		}
+		
 	};
 })();
