@@ -8,9 +8,19 @@
 		<meta charset="utf-8" />
 	</head>
 	<body>
+		<p style="text-align:center;">
+			Adding an URL stores it in a JSON object, and if it's a potential search engine,
+			adding it thrice causes a prompt for adding the search URL to the div.
+
+			The Search box uses the input as query and uses the checked search engine to display
+			results for the query in a new tab.
+
+			This is not a persistent app. It stores your data only for a single session.
+		</p>
+
 		<div id="urlDiv">
 			<input id="urlText" type="text" placeholder="Type URL" name="Url" />
-			<input id="urlSubmit" type="submit" value="Submit" onclick="global.submitForm();" />
+			<input id="urlSubmit" type="submit" value="Add" onclick="global.submitForm();" />
 		</div>
 
 		<div id="searchDiv">
