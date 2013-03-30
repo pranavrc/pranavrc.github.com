@@ -3,27 +3,36 @@ var global = (function () {
 	var possibleSearchUrls = {};
 	var searchParam;
 	var responseDiv;
+	var engineDiv;
 	
 	return {
 		submitForm: function () {
-			content = document.getElementById("urlText").value;
+			content = document.getElementById('urlText').value;
 			responseDiv = document.getElementById('response');
+			engineDiv = document.getElementById('engines');
 
 			if (this.isValidUrl(content) && this.isSearchUrl()) {
 				var searchUrl = content.substr(0, content.indexOf("?")) + "?" + searchParam + "=";
+				
+				if (possibleSearchUrls[searchUrl]) {
+					possibleSearchUrls[searchUrl] += 1;
 
-				if (possibleSearchUrls.searchUrl) {
-					possibleSearchUrls.searchUrl += 1;
-
-					if (possibleSearchUrls.searchUrl == 3) {
-						if (confirm("New Search Engine found at '" + searchUrl + "' Add?"))
-							responseDiv.innerHTML += '<input type="radio" name="engine" value="' + searchUrl + '">' + searchUrl + '<br />';
+					if (possibleSearchUrls[searchUrl] == 3) {
+						if (confirm("New Search Engine found at '" + searchUrl + "' Add?")) {
+							engineDiv.innerHTML += '<input type="radio" name="engine" value="' + searchUrl + '">' + searchUrl + '<br />';
+							responseDiv.innerHTML = 'Added.';
+						}
+					} else {
+						responseDiv.innerHTML = '';
 					}
+							
 				} else {
-					possibleSearchUrls.searchUrl = 1;
+					responseDiv.innerHTML = '';
+					possibleSearchUrls[searchUrl] = 1;
 				}
 
-			} else {
+			} else if (!this.isValidUrl(content)) {
+				responseDiv.innerHTML = 'Invalid URL.';				
 			}
 		},
 
@@ -52,6 +61,6 @@ var global = (function () {
 			var urlRe = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 			return urlRe.test(url);
 		}
-		
+				
 	};
 })();
