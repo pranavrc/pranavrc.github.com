@@ -2,36 +2,41 @@
 
 <html>
 	<head>
-		<title>Autosuggest Search Engines - Proof of Concept.</title>
+		<title>Proof of Concept.</title>
 		<link rel="stylesheet" href="./index.css">
 		<script src="./index.js"></script>
 		<meta charset="utf-8" />
 	</head>
 	<body>
-		<p style="text-align:center;">
+		<br />
+		<div id="urlDiv">
+			<input id="urlText" type="text" placeholder="Type URL" name="Url" />
+			<input id="urlSubmit" type="submit" value="Add" onclick="global.submitForm();" />
+		</div><br />
+
+		<hr /><br />
+
+		<div id="response">
+			Autosuggest Search Engines.
+		</div><br />
+
+		<div id="engineDiv">
 			Adding an URL stores it in a JSON object, and if it's a potential search engine,
 			adding it thrice causes a prompt for adding the search URL to the div.
 
 			The Search box uses the input as query and uses the checked search engine to display
 			results for the query in a new tab.
 
-			This is not a persistent app. It stores your data only for a single session.
-		</p>
+			This is not a persistent app. It stores your data only for a single session.<br />
 
-		<div id="urlDiv">
-			<input id="urlText" type="text" placeholder="Type URL" name="Url" />
-			<input id="urlSubmit" type="submit" value="Add" onclick="global.submitForm();" />
-		</div>
+			<div id="engines"></div>
+		</div><br />
+
+		<hr /><br />
 
 		<div id="searchDiv">
 			<input id="searchText" type="text" placeholder="Search" name="Search" />
 			<input id="searchSubmit" type="submit" value="Search" onclick="search.search();" />
-		</div>
-
-		<div id="response">
-		</div>
-
-		<div id="engines">
 		</div>
 	</body>
 </html>

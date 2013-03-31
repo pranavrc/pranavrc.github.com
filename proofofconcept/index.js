@@ -19,15 +19,18 @@ var global = (function () {
 
 					if (possibleSearchUrls[searchUrl] == 3) {
 						if (confirm("New Search Engine found at '" + searchUrl + "' Add?")) {
-							engineDiv.innerHTML += '<input type="radio" name="engine" value="' + searchUrl + '">' + searchUrl + '<br />';
-							responseDiv.innerHTML = 'Added Search URL.';
+							engineDiv.innerHTML += '<br /><input type="radio" name="engine" id="radio" value="'
+												   + searchUrl + '"><label for="radio">' + searchUrl + '</label><br />';
+							responseDiv.innerHTML = 'Added Search Engine.';
 						}
+					} else if (possibleSearchUrls[searchUrl] > 3) {
+						responseDiv.innerHTML = 'Already added Search Engine.';
 					} else {
-						responseDiv.innerHTML = '';
+						responseDiv.innerHTML = 'Added Search URL.';
 					}
 
 				} else {
-					responseDiv.innerHTML = '';
+					responseDiv.innerHTML = 'Added Search URL.';
 					possibleSearchUrls[searchUrl] = 1;
 				}
 
@@ -80,6 +83,8 @@ var search = (function () {
 			if (engineDiv.innerHTML) {
 				var activeEngine = this.activeRadioButton();
 				window.open(activeEngine + query, '_blank').focus();
+			} else {
+				responseDiv.innerHTML = 'No Search Engines found.';
 			}
 		},
 
