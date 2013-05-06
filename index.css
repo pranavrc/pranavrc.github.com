@@ -4,9 +4,9 @@ body {
 
 #parent {
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-	font-size: 15px;
+	font-size: 14.5px;
 	text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
-	text-align: center;
+	text-align: left;
 }
 
 #desc {
@@ -14,7 +14,7 @@ body {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	width: 60%;
-	line-height: 125%;
+	line-height: 130%;
 	border: 1px solid #999;
 	-webkit-box-shadow: 0px 0px 15px rgba(128, 0, 0, 0.3);
 	-moz-box-shadow: 0px 0px 15px rgba(128, 0, 0, 0.3);
@@ -60,13 +60,13 @@ ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	/*text-align: left;*/
+	text-align: center; 
 }
 
 li {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 5px;
-	padding-top: 5px;
+	/*border-bottom: 1px inset #666;*/
+	padding-bottom: 3px;
+	padding-top: 3px;
 }
 
 li:last-child {
