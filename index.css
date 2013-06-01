@@ -11,8 +11,8 @@ body {
 
 #desc {
 	margin: auto;
-	/*margin-top: 10px;
-	margin-bottom: 10px;*/
+	margin-top: 10px;
+	margin-bottom: 10px;
 	width: 60%;
 	line-height: 130%;
 	border: 1px solid #999;
@@ -23,13 +23,6 @@ body {
 	padding-left: 50px;
 	padding-right: 50px;
 	background-color: hsl(0,0%,90%);
-}
-
-p {
-	margin: auto;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	width: 100%;
 }
 
 hr {
