@@ -6,7 +6,7 @@ body {
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
 	font-size: 14.5px;
 	text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
-	text-align: left;
+	/*text-align: left;*/
 }
 
 #desc {
