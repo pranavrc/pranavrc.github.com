@@ -25,6 +25,12 @@ body {
 	background-color: hsl(0,0%,90%);
 }
 
+#text {
+	margin: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 hr {
 	color: white;
 	border: 0;
