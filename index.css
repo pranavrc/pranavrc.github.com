@@ -16,9 +16,9 @@ body {
 	width: 60%;
 	line-height: 130%;
 	border: 1px solid #999;
-	-webkit-box-shadow: 0px 0px 15px rgba(128, 0, 0, 0.3);
-	-moz-box-shadow: 0px 0px 15px rgba(128, 0, 0, 0.3);
-	box-shadow: 0px 0px 15px rgba(128, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	border-radius: 10px;
 	padding-left: 50px;
 	padding-right: 50px;
@@ -57,14 +57,14 @@ a:link {
 }
 
 a:visited {
-	color: #696969; 
+	color: #696969;
 }
 
 ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	text-align: center; 
+	text-align: center;
 }
 
 li {
@@ -76,7 +76,7 @@ li {
 li:last-child {
     border: none;
 }
- 
+
 li a {
 	text-decoration: none;
 	color: #000;
@@ -88,7 +88,7 @@ li a {
     -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
     transition: font-size 0.3s ease, background-color 0.3s ease;
 }
- 
+
 li a:hover {
     font-size: 18px;
     /*background: #f6f6f6;*/
@@ -99,6 +99,7 @@ i#quote {
 }
 
 i a {
+	background-color: hsl(0,0%,90%);
 	text-decoration: none;
 }
 
