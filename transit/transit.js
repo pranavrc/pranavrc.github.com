@@ -73,7 +73,7 @@ var transit = (function () {
                 $("#search").css({
                     'position': 'absolute',
                     'width': '50%',
-                    'height': '6px',
+                    'height': '12px',
                     'top': '1%',
                     'left': '20%',
                     'z-index': '99',
@@ -81,7 +81,7 @@ var transit = (function () {
                                    'Arial, Helvetica, sans-serif',
                     'font-size': '12px',
                     'border-radius': '5px',
-                    'padding': '10px',
+                    'padding': '5px',
                 });
 
                 $("#search").autocomplete({
@@ -570,9 +570,9 @@ var transit = (function () {
             $('#' + statusDiv).fadeOut(7500);
         },
 
-        main : function (selector, kmlFile, routeObj, vehicleObj) {
+        main : function (selector, remoteKmlFile, routeObj, vehicleObj) {
             var map = transit.initMap(selector, routeObj.stopnames, routeObj.points);
-            transit.overlayKml(kmlFile, map);
+            transit.overlayKml(remoteKmlFile, map);
             var routeLines = routeObj.lines;
             var routePoints = routeObj.points;
             var timezone = vehicleObj.timezone;
@@ -639,7 +639,7 @@ var transit = (function () {
                     }, 1000);
         },
 
-        initialize : function (selector, localKmlFile, kmlFile, jsonFile) {
+        initialize : function (selector, localKmlFile, remoteKmlFile, jsonFile) {
             google.maps.event.addDomListener(window, 'load',
                     function () {
                         var kml = transit.kmlPromise(localKmlFile);
@@ -649,7 +649,7 @@ var transit = (function () {
                             json.success(function (jsonData) {
                                 var routes = transit.routeParser(kmlData);
                                 var vehicles = transit.vehicleParser(jsonData);
-                                transit.main(selector, kmlFile, routes, vehicles);
+                                transit.main(selector, remoteKmlFile, routes, vehicles);
                             }).fail(function () {
                                 $(selector).css('position', 'relative');
                                 transit.initStatus(selector);
