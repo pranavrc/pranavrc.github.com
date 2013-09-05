@@ -572,7 +572,7 @@ var transit = (function () {
 
         main : function (selector, kmlFile, routeObj, vehicleObj) {
             var map = transit.initMap(selector, routeObj.stopnames, routeObj.points);
-            transit.overlayKml(remoteKmlFile, map);
+            transit.overlayKml(kmlFile, map);
             var routeLines = routeObj.lines;
             var routePoints = routeObj.points;
             var timezone = vehicleObj.timezone;
