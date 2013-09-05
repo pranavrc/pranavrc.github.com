@@ -639,10 +639,10 @@ var transit = (function () {
                     }, 1000);
         },
 
-        initialize : function (selector, kmlFile, jsonFile) {
+        initialize : function (selector, localKmlFile, kmlFile, jsonFile) {
             google.maps.event.addDomListener(window, 'load',
                     function () {
-                        var kml = transit.kmlPromise(kmlFile);
+                        var kml = transit.kmlPromise(localKmlFile);
                         var json = transit.jsonPromise(jsonFile);
 
                         kml.success(function (kmlData) {
