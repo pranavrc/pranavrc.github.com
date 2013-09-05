@@ -4,7 +4,6 @@
     [
         {
             "name": "Sub #1",
-            "info": "EMU",
             "route": "Egmore Line",
             "stops": [
             {
@@ -34,7 +33,7 @@
                 "name": "Chetpet",
                 "arrival": "11:46:30",
                 "departure": "18:58:00",
-                "day": 2 
+                "day": 2
             },
             {
                 "name": "Nungambakkam",
@@ -45,7 +44,6 @@
         },
         {
             "name": "Sub #2",
-            "info": "EMU",
             "route": "Central Line",
             "stops": [
             {
@@ -93,24 +91,23 @@
                 "name": "Korattur",
                 "arrival": "12:53",
                 "departure": "12:53:30",
-                "day": 2 
+                "day": 2
             },
             {
                 "name": "Pattaravakkam",
                 "arrival": "12:59:00",
                 "departure": "12:59:30",
-                "day": 3 
+                "day": 3
             },
             {
                 "name": "Ambattur",
                 "arrival": "19:50:00",
-                "day": 4 
+                "day": 4
             }
             ]
         },
         {
             "name": "Sub #3",
-            "info": "EMU",
             "route": "Central line",
             "stops": [
             {
@@ -122,7 +119,7 @@
                 "name": "perambur",
                 "arrival": "18:47:10",
                 "departure": "18:47:20",
-                "day": 1 
+                "day": 1
             },
             {
                 "name": "ambattur",
