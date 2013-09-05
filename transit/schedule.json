@@ -112,30 +112,30 @@
             "stops": [
             {
                 "name": "ambattur",
-                "departure": "18:47",
+                "departure": "22:05",
                 "day": 1
             },
             {
                 "name": "perambur",
-                "arrival": "18:47:10",
-                "departure": "18:47:20",
+                "arrival": "22:05:10",
+                "departure": "22:05:20",
                 "day": 1
             },
             {
                 "name": "ambattur",
-                "arrival": "18:47:30",
-                "departure": "18:47:40",
+                "arrival": "22:05:30",
+                "departure": "22:05:40",
                 "day": 1
             },
             {
                 "name": "central",
-                "arrival": "18:47:50",
-                "departure": "18:48:00",
+                "arrival": "22:05:50",
+                "departure": "22:06:00",
                 "day": 1
             },
             {
                 "name": "perambur",
-                "arrival": "18:48:20",
+                "arrival": "22:06:10",
                 "day": 1
             }
             ]
