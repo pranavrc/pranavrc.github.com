@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Foo</title>
+        <meta charset="utf-8" />
+
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
+        <script src="transit.js"></script>
+    </head>
+
+    <body>
+        <div id="map" style="width:800px;height:600px;"></div>
+
+        <script>
+            transit.initialize("#map",
+                               "https://raw.github.com/pranavrc/transit.js/master/sample.kml",
+                               "https://raw.github.com/pranavrc/transit/master/schedule.json");
+        </script>
+    </body>
+</html>
