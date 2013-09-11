@@ -5,60 +5,97 @@ var transit = (function () {
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
 
+            $(selector).html('');
+
             $(selector).append("<div id=\"timezone\"></div>")
                        .append("<div id=\"transitMap\"></div>");
 
-            $(selector).css('position', 'relative');
-
-            $("#transitMap").css({
+            $(selector + "> #transitMap").css({
                 'position': 'absolute',
                 'width': '100%',
                 'height': '100%',
             });
 
-            $("#timezone").css({
+            $(selector + "> #timezone").css({
                 'position': 'absolute',
-                'bottom': '4%',
-                'left': '1%',
+                'bottom': '3%',
+                'right': '0.8%',
                 'z-index': '99',
-                'font-family': '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
                 'font-weight': 'bold',
-                'font-size': '14px',
-                'text-shadow': 'hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px',
             });
 
             transit.initStatus(selector);
+            transit.initTicker(selector);
             var map = new google.maps.Map(document.getElementById('transitMap'), mapDet);
             transit.initSearch(selector, stopsList, routePoints, map);
 
             return map;
         },
 
-        initStatus : function (selector) {
-            $(selector).append('<div id="status"></div>');
+        initTicker : function (selector) {
+            $(selector).append('<div id="tickerDiv"><strong>Transit Log<br /><br />' +
+                               '</strong><div id="ticker"></div><br />' +
+                               '<div id="clear"><strong>Click here to reset</strong></div></div>');
+            var tickerDiv = selector + "> #tickerDiv";
+            var ticker = tickerDiv + "> #ticker";
+            var clear = tickerDiv + "> #clear";
 
-            $('#status').css({
+            $(tickerDiv).css({
                 'position': 'absolute',
-                'bottom': '3%',
-                'right': '1%',
+                'bottom': '1%',
+                'left': '1%',
+                'width': '40%',
                 'z-index': '99',
                 'background-color': 'hsl(0, 0%, 90%)',
-                'font-family': '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
-                'font-size': '12px',
+                'height': '35%',
                 '-webkit-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
                 '-moz-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
                 'box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
-                'text-shadow': 'hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px',
-                'border-radius': '5px',
+                'border-radius': '10px',
                 'padding': '10px',
+                'text-align': 'center',
                 'display': 'none'
             });
 
-            $('#status').hover(function () {
-                $('#status').stop(true, true);
-                $('#status').css('display', 'inline');
+            $(ticker).css({
+                'height': '75%',
+                'overflow-y': 'auto',
+                'overflow-x': 'auto',
+                'text-align': 'left',
+                'line-height': '150%'
+            });
+
+            $(clear).css({
+                'cursor': 'pointer'
+            });
+
+            $(clear).click(function () {
+                $(ticker).html('');
+            });
+
+            $(tickerDiv).hover(function () {
+                $(tickerDiv).stop(true, true);
+                $(tickerDiv).css('display', 'inline');
             }, function () {
-                $('#status').css('display', 'none');
+                $(tickerDiv).fadeOut(5000);
+            });
+        },
+
+        initStatus : function (selector) {
+            $(selector).append('<div id="status"></div>');
+
+            $(selector + '> #status').css({
+                'position': 'absolute',
+                'bottom': '3%',
+                'right': '0.8%',
+                'z-index': '99',
+                'background-color': 'hsl(0, 0%, 90%)',
+                '-webkit-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                '-moz-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                'box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                'border-radius': '5px',
+                'padding': '10px',
+                'display': 'none'
             });
         },
 
@@ -70,21 +107,18 @@ var transit = (function () {
                 $(selector).append("<input type=\"text\" id=\"search\" " +
                                     "placeholder=\"Search for a stop and select it from the dropdown.\">");
 
-                $("#search").css({
+                $(selector + "> #search").css({
                     'position': 'absolute',
                     'width': '50%',
-                    'height': '12px',
+                    'height': '13px',
                     'top': '1%',
                     'left': '20%',
                     'z-index': '99',
-                    'font-family': '"Lucida Grande", "Lucida Sans Unicode", Verdana,' +
-                                   'Arial, Helvetica, sans-serif',
-                    'font-size': '12px',
                     'border-radius': '5px',
                     'padding': '5px',
                 });
 
-                $("#search").autocomplete({
+                $(selector + "> #search").autocomplete({
                     source: stopsList,
                     select: function (event, ui) {
                         var coordsOfItem = routePoints[ui.item.value];
@@ -94,14 +128,20 @@ var transit = (function () {
                     }
                 });
 
-                $("#search").focus(function () {
+                $(selector + "> #search").focus(function () {
                     $(this).val('');
+                });
+
+                $('.ui-autocomplete').css({
+                    'max-height': '50%',
+                    'overflow-y': 'auto',
+                    'overflow-x': 'hidden',
+                    'padding-right': '20px'
                 });
             });
         },
 
-        initMarker : function (coords, mouseoverText, map, color) {
-            mouseoverText = (typeof mouseoverText == 'undefined') ? 'Marker' : mouseoverText;
+        initMarker : function (coords, selector, map, color) {
             var markerPos = new google.maps.LatLng(coords.x, coords.y);
 
             var markerIcon = {
@@ -118,17 +158,19 @@ var transit = (function () {
 
             marker = new google.maps.Marker(marker);
 
+            return marker;
+        },
+
+        onMarkerMouseover : function (selector, marker, mouseoverText) {
             google.maps.event.addListener(marker, 'mouseover', function () {
-                $('#status').stop(true, true);
-                $('#status').css('display', 'inline');
-                $('#status').html(mouseoverText);
+                $(selector + '> #status').stop(true, true);
+                $(selector + '> #status').css('display', 'inline');
+                $(selector + '> #status').html(mouseoverText);
             });
 
             google.maps.event.addListener(marker, 'mouseout', function () {
-                $('#status').css('display', 'none');
+                $(selector + '> #status').css('display', 'none');
             });
-
-            return marker;
         },
 
         overlayKml : function (kmlUrl, map) {
@@ -196,11 +238,12 @@ var transit = (function () {
 
             vehicleObj.timezone = data.timezone;
             vehicleObj.vehicles = data.vehicles;
+            vehicleObj.stopinterval = data.defaultstopinterval;
 
             return vehicleObj;
         },
 
-        schedule : function (vehicleObj, routes, timezone) {
+        scheduler : function (vehicleObj, routes, timezone, stopinterval) {
             var vehicleArrivals = {};
             var vehicleDepartures = {};
             var vehicleTravelTimes = new Array();
@@ -209,49 +252,130 @@ var transit = (function () {
             var noOfStops = vehicleObj.stops.length;
             var firstStop = stopsObj[0];
             var firstStopName = firstStop.name;
-            var startTime = transit.parseTime(firstStop.departure, firstStop.day);
+
+            if (typeof firstStop.departure == 'undefined')
+                throw new Error(vehicleObj.name + " is missing its initial departure time at " + firstStopName);
+
+            var startTime = transit.parseTime(firstStop.departure.time, firstStop.departure.day);
             var vehicleStopCoords = {};
             var points = routes.points;
             var opLine = routes.lines[vehicleObj.route.toLowerCase()];
 
-            vehicleTravelTimesAsStrings.push(firstStop.departure);
+            if (typeof opLine == "undefined")
+                throw new Error(vehicleObj.name + "'s route " + vehicleObj.route + " doesn't exist.");
+
+            vehicleTravelTimesAsStrings.push(firstStop.departure.time);
             vehicleDepartures[startTime - startTime] = firstStopName;
             vehicleTravelTimes.push(startTime - startTime);
-            vehicleStopCoords[firstStopName] = transit.resolvePointToLine(opLine, points[firstStopName.toLowerCase()]);
+
+            try {
+                vehicleStopCoords[firstStopName] = transit.resolvePointToLine(opLine,
+                                                                              points[firstStopName.toLowerCase()]);
+            } catch (err) {
+                throw new Error("The stop " + firstStopName + " in vehicle " +
+                                vehicleObj.name + "'s schedule wasn't found in its route.");
+            }
 
             for (var eachStop = 1; eachStop < noOfStops - 1; eachStop++) {
                 var temp = stopsObj[eachStop];
+                var prevStop = stopsObj[eachStop - 1];
                 var tempName = temp.name;
-                var currArrivalTime = transit.parseTime(temp.arrival, temp.day) - startTime;
-                var currDepartureTime = transit.parseTime(temp.departure, temp.day) - startTime;
+
+                if (typeof temp.arrival == 'undefined') {
+                    var currDepartureTime = transit.parseTime(temp.departure.time, temp.departure.day) -
+                                            startTime;
+                    var currArrivalTime = currDepartureTime - transit.parseTime(stopinterval, 1);
+                    temp.arrival = {};
+                    temp.arrival.time = transit.secondsToHours(currArrivalTime + startTime).replace('+', '');
+                    temp.arrival.day = Math.ceil((currArrivalTime + startTime) / 86400);
+                } else {
+                    var currArrivalTime = transit.parseTime(temp.arrival.time, temp.arrival.day) -
+                                          startTime;
+                }
+
+                if (typeof temp.departure == 'undefined') {
+                    var currArrivalTime = transit.parseTime(temp.arrival.time, temp.arrival.day) - startTime;
+                    var currDepartureTime = currArrivalTime + transit.parseTime(stopinterval, 1);
+                    temp.departure = {};
+                    temp.departure.time = transit.secondsToHours(currDepartureTime + startTime).replace('+', '');
+                    temp.departure.day = Math.ceil((currDepartureTime + startTime) / 86400);
+                } else {
+                    var currDepartureTime = transit.parseTime(temp.departure.time, temp.departure.day) -
+                                            startTime;
+                }
+
+                vehicleTravelTimesAsStrings.push(temp.arrival.time, temp.departure.time);
                 vehicleArrivals[currArrivalTime] = tempName;
                 vehicleDepartures[currDepartureTime] = tempName;
-                vehicleTravelTimesAsStrings.push(temp.arrival, temp.departure);
                 vehicleTravelTimes.push(currArrivalTime, currDepartureTime);
-                vehicleStopCoords[tempName] = transit.resolvePointToLine(opLine, points[tempName.toLowerCase()]);
-                var prevStop = vehicleStopCoords[stopsObj[eachStop - 1].name];
+
+                try {
+                    vehicleStopCoords[tempName] = transit.resolvePointToLine(opLine,
+                                                                             points[tempName.toLowerCase()]);
+                } catch (err) {
+                    throw new Error("The stop " + tempName + " in vehicle " +
+                                    vehicleObj.name + "'s schedule wasn't found in its route.");
+                }
             }
 
             var lastStop = stopsObj[noOfStops - 1];
             var lastStopName = lastStop.name;
-            var endTime = transit.parseTime(lastStop.arrival, lastStop.day) - startTime;
-            vehicleArrivals[endTime] = lastStopName;
-            vehicleTravelTimesAsStrings.push(lastStop.arrival);
-            vehicleTravelTimes.push(endTime);
-            vehicleStopCoords[lastStopName] = transit.resolvePointToLine(opLine, points[lastStopName.toLowerCase()]);
 
-            var colors = ['red', 'blue', 'yellow', 'white', 'green', 'orange'];
+            if (typeof lastStop.arrival == 'undefined')
+                throw new Error(vehicleObj.name + " is missing its final arrival time at " + lastStopName);
+
+            var endTime = transit.parseTime(lastStop.arrival.time, lastStop.arrival.day) - startTime;
+            vehicleArrivals[endTime] = lastStopName;
+            vehicleTravelTimesAsStrings.push(lastStop.arrival.time);
+            vehicleTravelTimes.push(endTime);
+
+            if (!transit.isSorted(vehicleTravelTimes))
+                throw new Error(vehicleObj.name + " seems to be going backwards in time.");
+
+            try {
+                vehicleStopCoords[lastStopName] = transit.resolvePointToLine(opLine,
+                                                                             points[lastStopName.toLowerCase()]);
+            } catch (err) {
+                throw new Error("The stop " + lastStopName + " in vehicle " +
+                                vehicleObj.name + "'s schedule wasn't found in its route.");
+            }
+
+            // Thanks to https://gist.github.com/bobspace/2712980 for the color list.
+            var colors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black",
+                          "BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse",
+                          "Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson","Cyan","DarkBlue","DarkCyan",
+                          "DarkGoldenRod","DarkGray","DarkGrey","DarkGreen","DarkKhaki","DarkMagenta",
+                          "DarkOliveGreen","Darkorange","DarkOrchid","DarkRed","DarkSalmon","DarkSeaGreen",
+                          "DarkSlateBlue","DarkSlateGray","DarkSlateGrey","DarkTurquoise","DarkViolet","DeepPink",
+                          "DeepSkyBlue","DimGray","DimGrey","DodgerBlue","FireBrick","FloralWhite","ForestGreen",
+                          "Fuchsia","Gainsboro","GhostWhite","Gold","GoldenRod","Gray","Grey","Green","GreenYellow",
+                          "HoneyDew","HotPink","IndianRed","Indigo","Ivory","Khaki","Lavender","LavenderBlush",
+                          "LawnGreen","LemonChiffon","LightBlue","LightCoral","LightCyan","LightGoldenRodYellow",
+                          "LightGray","LightGrey","LightGreen","LightPink","LightSalmon","LightSeaGreen",
+                          "LightSkyBlue","LightSlateGray","LightSlateGrey","LightSteelBlue","LightYellow","Lime",
+                          "LimeGreen","Linen","Magenta","Maroon","MediumAquaMarine","MediumBlue","MediumOrchid",
+                          "MediumPurple","MediumSeaGreen","MediumSlateBlue","MediumSpringGreen","MediumTurquoise",
+                          "MediumVioletRed","MidnightBlue","MintCream","MistyRose","Moccasin","NavajoWhite","Navy",
+                          "OldLace","Olive","OliveDrab","Orange","OrangeRed","Orchid","PaleGoldenRod","PaleGreen",
+                          "PaleTurquoise","PaleVioletRed","PapayaWhip","PeachPuff","Peru","Pink","Plum","PowderBlue",
+                          "Purple","Red","RosyBrown","RoyalBlue","SaddleBrown","Salmon","SandyBrown","SeaGreen",
+                          "SeaShell","Sienna","Silver","SkyBlue","SlateBlue","SlateGray","SlateGrey","Snow",
+                          "SpringGreen","SteelBlue","Tan","Teal","Thistle","Tomato","Turquoise","Violet","Wheat",
+                          "White","WhiteSmoke","Yellow","YellowGreen"];
+
             vehicleObj.color = colors[Math.floor(Math.random() * colors.length)];
 
             return {
                 "name": vehicleObj.name,
+                "info": vehicleObj.info,
                 "color": vehicleObj.color,
                 "starts": startTime,
-                "baseinfo": transit.createBaseInfo(vehicleObj.name, firstStopName, firstStop.departure,
-                                                   lastStopName, lastStop.arrival),
+                "baseinfo": transit.createBaseInfo(vehicleObj.name, vehicleObj.info,
+                                                   firstStopName, firstStop.departure.time,
+                                                   lastStopName, lastStop.arrival.time),
                 "route": opLine,
                 "stops": vehicleStopCoords,
-                "days": lastStop.day - firstStop.day,
+                "days": lastStop.arrival.day - firstStop.departure.day,
                 "arrivals": vehicleArrivals,
                 "departures": vehicleDepartures,
                 "traveltimes": vehicleTravelTimes,
@@ -265,6 +389,14 @@ var transit = (function () {
 
         trim : function (string) {
             return string.replace(/^\s+|\s+$/g, '');
+        },
+
+        isSorted : function (list) {
+            for (var i = 0; i < list.length - 1; i++) {
+                if (list[i] > list[i+1]) return false;
+            }
+
+            return true;
         },
 
         resolvePointToLine : function (line, point) {
@@ -376,8 +508,6 @@ var transit = (function () {
 
         // Variant of binary search that returns enclosing elements of searchElement in array.
         enclosure : function (searchElement) {
-            'use strict';
-
             var minIndex = 0;
             var maxIndex = this.length - 1;
             var currentIndex;
@@ -417,10 +547,23 @@ var transit = (function () {
             var tzS = timezone.split(':');
             tzS = tzS.map(function (x) { return parseInt(x, 10); });
 
-            return tzS[0] * 3600 + tzS[1] * 60 + timeOffset * 60;
+            if (tzS.length < 3)
+                tzS[2] = 0;
+
+            if (tzS[0] < 0) {
+                tzS[1] *= -1;
+                tzS[2] *= -1;
+            }
+
+            return (tzS[0] * 3600 + tzS[1] * 60 + tzS[2] + timeOffset * 60) % 86400;
         },
 
         parseTime : function (timeString, day) {
+            var hmsRe = /^(?:2[0-3]|[01]?[0-9]):[0-5]?[0-9](:[0-5]?[0-9])?$/;
+
+            if (!hmsRe.test(timeString))
+                throw new Error(timeString + " is not a valid timestring.");
+
             var hms = timeString.split(':');
             hms = hms.map(function (x) { return parseInt(x, 10); });
 
@@ -448,7 +591,7 @@ var transit = (function () {
                          (seconds  < 10 ? "0" + seconds : seconds);
 
             if (timeInSeconds >= 0)
-                return result;
+                return "+" + result;
             else
                 return "-" + result;
         },
@@ -542,14 +685,15 @@ var transit = (function () {
                     }
                 }
 
-                if (currPos.currentCoords) positions.push(currPos);
+                positions.push(currPos);
             }
 
             return positions;
         },
 
-        createBaseInfo : function (name, startpoint, starttime, endpoint, endtime) {
+        createBaseInfo : function (name, info, startpoint, starttime, endpoint, endtime) {
             return "<strong>Vehicle: </strong>" + name + "<br />" +
+                   ((typeof info != "undefined") ? "<strong>Info: </strong>" + info + "<br />" : "") +
                    "<strong>Start: </strong>" + startpoint + " (" + starttime +
                    ")<br />" + "<strong>End: </strong>" + endpoint + " (" +
                    endtime + ")<br />";
@@ -567,27 +711,43 @@ var transit = (function () {
             }
         },
 
-        writeStatus : function (statusDiv, htmlContent) {
-            $('#' + statusDiv).stop(true, true);
-            $('#' + statusDiv).css('display', 'inline');
-            $('#' + statusDiv).html(htmlContent);
-            $('#' + statusDiv).fadeOut(7500);
+        writeLog : function (selector, currentTime, htmlContent) {
+            var tickerDiv = selector + "> #tickerDiv";
+            var ticker = tickerDiv + "> #ticker";
+
+            $(tickerDiv).show();
+            $(tickerDiv).stop(true, true);
+            $(ticker).append('<em>' + currentTime + '</em> | ' + htmlContent + '<br />');
+            $(tickerDiv).css('display','inline');
+            $(ticker).scrollTop($(ticker)[0].scrollHeight);
+            $(tickerDiv).fadeOut(5000);
         },
 
-        main : function (selector, remoteKmlFile, routeObj, vehicleObj) {
+        writeStatus : function (selector, message) {
+            $(selector + '> #status').css('display', 'inline');
+            $(selector + '> #status').html(message);
+        },
+
+        main : function (selector, refreshInterval, remoteKmlFile, routeObj, vehicleObj) {
             var map = transit.initMap(selector, routeObj.stopnames, routeObj.points);
             transit.overlayKml(remoteKmlFile, map);
             var routeLines = routeObj.lines;
             var routePoints = routeObj.points;
             var timezone = vehicleObj.timezone;
             var vehicles = vehicleObj.vehicles;
+            var stopinterval = vehicleObj.stopinterval;
             var noOfVehicles = vehicles.length;
 
-            $('#timezone').append("UTC" + timezone + "/Local+" +
+            $('#timezone').append("UTC" + timezone + "/Local" +
                                   transit.secondsToHours(transit.parseTimeZone(timezone)));
 
             for (var count = 0; count < noOfVehicles; count++) {
-                vehicles[count] = transit.schedule(vehicles[count], routeObj, timezone);
+                try {
+                    vehicles[count] = transit.scheduler(vehicles[count], routeObj, timezone, stopinterval);
+                } catch (err) {
+                    transit.writeStatus(selector, err);
+                    throw new Error(err);
+                }
             }
 
             var transition = setInterval(
@@ -597,10 +757,6 @@ var transit = (function () {
 
                             if (typeof vehicle.markers == "undefined") {
                                 vehicle.markers = new Array();
-                            } else {
-                                for (var i = 0; i < vehicle.markers.length; i++) {
-                                    vehicle.markers[i].setMap(null);
-                                }
                             }
 
                             var currPositions = transit.estimateCurrentPosition(vehicle, timezone);
@@ -608,44 +764,72 @@ var transit = (function () {
                             for (var i = 0; i < currPositions.length; i++) {
                                 var currPosition = currPositions[i];
 
-                                if (!currPosition.currentCoords) continue;
+                                if (!currPosition.currentCoords) {
+                                    if (typeof vehicle.markers[i] != "undefined") {
+                                        vehicle.markers[i].setMap(null);
+                                        delete vehicle.markers[i];
+                                    }
+                                    continue;
+                                }
 
                                 if (currPosition.justReached) {
-                                    transit.writeStatus('status',
-                                                        "<strong>" + vehicle.name +
-                                                        "</strong> just reached <strong>" +
-                                                        currPosition.stationaryAt + "</strong>. " +
-                                                        "Departs at: <strong>" + currPosition.departureTime +
-                                                        "</strong>." );
+                                    transit.writeLog(selector, transit.currTime(),
+                                                     "<strong>" + vehicle.name +
+                                                     "</strong> just reached <strong>" +
+                                                     currPosition.stationaryAt + "</strong>. " +
+                                                     "Departs at: <strong>" + currPosition.departureTime +
+                                                     "</strong>." );
                                 } else if (currPosition.justLeft || currPosition.started) {
                                     var sOrL = currPosition.started ? 'just started from' : 'just left';
-                                    transit.writeStatus('status',
-                                                        "<strong>" + vehicle.name +
-                                                        "</strong> " + sOrL + " <strong>" +
-                                                        currPosition.stationaryAt + "</strong>. " +
-                                                        "Next Stop: <strong>" + currPosition.approachingStop +
-                                                        "</strong> at <strong>" + currPosition.approachTime +
-                                                        "</strong>.");
+                                    transit.writeLog(selector, transit.currTime(),
+                                                     "<strong>" + vehicle.name +
+                                                     "</strong> " + sOrL + " <strong>" +
+                                                     currPosition.stationaryAt + "</strong>. " +
+                                                     "Next Stop: <strong>" + currPosition.approachingStop +
+                                                     "</strong> at <strong>" + currPosition.approachTime +
+                                                     "</strong>.");
                                 } else if (currPosition.completed) {
-                                    transit.writeStatus('status',
-                                                        "<strong>" + vehicle.name +
-                                                        "</strong> just reached its destination at <strong>" +
-                                                        currPosition.stationaryAt + "</strong>.");
+                                    transit.writeLog(selector, transit.currTime(),
+                                                     "<strong>" + vehicle.name +
+                                                     "</strong> just reached its destination at <strong>" +
+                                                     currPosition.stationaryAt + "</strong>.");
+                                    vehicle.markers[i].setMap(null);
+                                    delete vehicle.markers[i];
                                 }
 
                                 var mouseOverInfo = transit.createPositionInfo(vehicle.baseinfo, currPosition);
-                                var currMarker = transit.initMarker(currPosition.currentCoords,
-                                                                    mouseOverInfo, map, vehicle.color);
-                                currMarker.setMap(map);
-                                vehicle.markers[i] = currMarker;
+
+                                if (typeof vehicle.markers[i] == "undefined") {
+                                    var currMarker = transit.initMarker(currPosition.currentCoords, selector,
+                                                                        map, vehicle.color);
+                                    currMarker.setMap(map);
+                                    vehicle.markers[i] = currMarker;
+                                } else {
+                                    var currMarkerPos = new google.maps.LatLng(currPosition.currentCoords.x,
+                                                                               currPosition.currentCoords.y);
+                                    vehicle.markers[i].setPosition(currMarkerPos);
+                                }
+
+                                transit.onMarkerMouseover(selector, vehicle.markers[i], mouseOverInfo);
                             }
                         }
-                    }, 1000);
+                    }, refreshInterval);
         },
 
-        initialize : function (selector, localKmlFile, remoteKmlFile, jsonFile) {
+        initialize : function (selector, refreshInterval, localKmlFile, remoteKmlFile, jsonFile) {
             google.maps.event.addDomListener(window, 'load',
                     function () {
+                        $(selector).css({
+                            'position': 'relative',
+                            'font-family': '"Lucida Grande", "Lucida Sans Unicode",' +
+                                           'Verdana, Arial, Helvetica, sans-serif',
+                            'font-size': '12px',
+                            'text-shadow': 'hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px',
+                            'background-color': 'hsl(0, 0%, 90%)'
+                        });
+
+                        $(selector).html("<div style='position:absolute;top:46%;right:46%;'>" +
+                                         "<strong>Initializing, et al...</strong></div>");
                         var kml = transit.kmlPromise(localKmlFile);
                         var json = transit.jsonPromise(jsonFile);
 
@@ -653,18 +837,18 @@ var transit = (function () {
                             json.success(function (jsonData) {
                                 var routes = transit.routeParser(kmlData);
                                 var vehicles = transit.vehicleParser(jsonData);
-                                transit.main(selector, remoteKmlFile, routes, vehicles);
+                                transit.main(selector, refreshInterval, remoteKmlFile, routes, vehicles);
                             }).fail(function () {
                                 $(selector).css('position', 'relative');
+                                $(selector).html('');
                                 transit.initStatus(selector);
-                                $('#status').css('display', 'inline');
-                                $('#status').html('Oh Shoot, there was an error loading the JSON file.');
+                                transit.writeStatus(selector, 'Oh Shoot, there was an error loading the JSON file.');
                             });
                         }).fail(function () {
                             $(selector).css('position', 'relative');
+                            $(selector).html('');
                             transit.initStatus(selector);
-                            $('#status').css('display', 'inline');
-                            $('#status').html('Oh Shoot, there was an error loading the KML file.');
+                            transit.writeStatus(selector, 'Oh Shoot, there was an error loading the KML file.');
                         });
                     });
         }
