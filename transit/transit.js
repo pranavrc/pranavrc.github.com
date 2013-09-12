@@ -54,6 +54,8 @@ var transit = (function () {
                 'border-radius': '10px',
                 'padding': '10px',
                 'text-align': 'center',
+                'overflow-y': 'auto',
+                'overflow-x': 'auto',
                 'display': 'none'
             });
 
@@ -405,13 +407,13 @@ var transit = (function () {
         resolvePointToLine : function (line, point) {
             if (point.x == line[0].x && point.y == line[0].y)
                 return point;
-            var closestDist = transit.haversine(line[0], point).toFixed(20);
+            var closestDist = transit.linearDist(line[0], point).toFixed(20);
             var currPt = line[0];
             for (var count = 1; count < line.length; count++) {
                 if (point.x == line[count].x && point.y == line[count].y)
                     return point;
 
-                var currDist = transit.haversine(line[count], point).toFixed(20);
+                var currDist = transit.linearDist(line[count], point).toFixed(20);
 
                 if (closestDist > currDist) {
                     currPt = line[count];
@@ -446,7 +448,7 @@ var transit = (function () {
         },
 
         linearDist : function (sourceCoords, targetCoords) {
-            return Math.sqrt(Math.pow((targetCoords.x - sourceCoords.x), 2),
+            return Math.sqrt(Math.pow((targetCoords.x - sourceCoords.x), 2) +
                              Math.pow((targetCoords.y - sourceCoords.y), 2));
         },
 
@@ -493,7 +495,7 @@ var transit = (function () {
             var percentages = new Array();
 
             for (var x = 0; x < routeLength - 1; x++) {
-                totalDist += transit.haversine(points[x], points[x + 1]);
+                totalDist += transit.linearDist(points[x], points[x + 1]);
                 distances.push(totalDist);
             }
 
@@ -731,28 +733,7 @@ var transit = (function () {
             $(selector + '> #status').html(message);
         },
 
-        main : function (selector, refreshInterval, remoteKmlFile, routeObj, vehicleObj) {
-            var map = transit.initMap(selector, routeObj.stopnames, routeObj.points);
-            transit.overlayKml(remoteKmlFile, map);
-            var routeLines = routeObj.lines;
-            var routePoints = routeObj.points;
-            var timezone = vehicleObj.timezone;
-            var vehicles = vehicleObj.vehicles;
-            var stopinterval = vehicleObj.stopinterval;
-            var noOfVehicles = vehicles.length;
-
-            $('#timezone').append("UTC" + timezone + "/Local" +
-                                  transit.secondsToHours(transit.parseTimeZone(timezone)));
-
-            for (var count = 0; count < noOfVehicles; count++) {
-                try {
-                    vehicles[count] = transit.scheduler(vehicles[count], routeObj, timezone, stopinterval);
-                } catch (err) {
-                    transit.writeStatus(selector, err);
-                    throw new Error(err);
-                }
-            }
-
+        setInMotion : function (selector, refreshInterval, vehicles, noOfVehicles, stopinterval, timezone, map) {
             var transition = setInterval(
                     function() {
                         for (var count = 0; count < noOfVehicles; count++) {
@@ -819,7 +800,39 @@ var transit = (function () {
                     }, refreshInterval);
         },
 
-        initialize : function (selector, refreshInterval, localKmlFile, remoteKmlFile, jsonFile) {
+        callMain : function (selector, refreshInterval, routeObj, vehicleObj, remoteKmlFile, vehicles) {
+            var timezone = vehicleObj.timezone;
+            var stopinterval = vehicleObj.stopinterval;
+            var map = transit.initMap(selector, routeObj.stopnames, routeObj.points);
+            transit.overlayKml(remoteKmlFile, map);
+
+            $('#timezone').append("UTC" + timezone + "/Local" +
+                                  transit.secondsToHours(transit.parseTimeZone(timezone)));
+
+            if (typeof vehicles == "undefined") {
+                var vehicles = vehicleObj.vehicles;
+                var noOfVehicles = vehicles.length;
+
+                for (var count = 0; count < noOfVehicles; count++) {
+                    try {
+                        vehicles[count] = transit.scheduler(vehicles[count], routeObj,
+                                                            timezone, stopinterval);
+                    } catch (err) {
+                        transit.writeStatus(selector, err);
+                        throw new Error(err);
+                    }
+                }
+            } else {
+                var noOfVehicles = vehicles.length;
+            }
+
+            transit.setInMotion(selector, refreshInterval, vehicles, noOfVehicles,
+                                stopinterval, timezone, map);
+        },
+
+        initialize : function (selector, localKmlFile, remoteKmlFile, jsonFile, refreshInterval) {
+            refreshInterval = (typeof refreshInterval == "undefined" ||
+                               refreshInterval < 1) ? 1000 : refreshInterval * 1000;
             google.maps.event.addDomListener(window, 'load',
                     function () {
                         $(selector).css({
@@ -838,9 +851,9 @@ var transit = (function () {
 
                         kml.success(function (kmlData) {
                             json.success(function (jsonData) {
-                                var routes = transit.routeParser(kmlData);
-                                var vehicles = transit.vehicleParser(jsonData);
-                                transit.main(selector, refreshInterval, remoteKmlFile, routes, vehicles);
+                                var routeObj = transit.routeParser(kmlData);
+                                var vehicleObj = transit.vehicleParser(jsonData);
+                                transit.callMain(selector, refreshInterval, routeObj, vehicleObj, remoteKmlFile);
                             }).fail(function () {
                                 $(selector).css('position', 'relative');
                                 $(selector).html('');
