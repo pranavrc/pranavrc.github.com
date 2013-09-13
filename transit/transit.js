@@ -8,7 +8,8 @@ var transit = (function () {
             $(selector).html('');
 
             $(selector).append("<div id=\"timezone\"></div>")
-                       .append("<div id=\"transitMap\"></div>");
+                       .append("<div id=\"transitMap\"></div>")
+                       .append("<div id=\"toggleLog\">Start Logging</div>");
 
             $(selector + "> #transitMap").css({
                 'position': 'absolute',
@@ -24,8 +25,30 @@ var transit = (function () {
                 'font-weight': 'bold',
             });
 
+            $(selector + "> #toggleLog").css({
+                'position': 'absolute',
+                'bottom': '4%',
+                'left': '1%',
+                'z-index': '99',
+                'color': '#800000',
+                '-webkit-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                '-moz-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                'box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
+                'background-color': 'hsl(0, 0%, 90%)',
+                'border-radius': '10px',
+                'padding': '10px',
+                'font-weight': 'bold',
+                'cursor': 'pointer',
+            });
+
+            $(selector + "> #toggleLog").click(function () {
+                transit.initTicker(selector);
+                var tickerDiv = selector + "> #tickerDiv";
+                $(tickerDiv).css('display', 'inline');
+                $(tickerDiv).fadeOut(5000);
+            });
+
             transit.initStatus(selector);
-            transit.initTicker(selector);
             var map = new google.maps.Map(document.getElementById('transitMap'), mapDet);
             transit.initSearch(selector, stopsList, routePoints, map);
 
@@ -33,12 +56,16 @@ var transit = (function () {
         },
 
         initTicker : function (selector) {
-            $(selector).append('<div id="tickerDiv"><strong>Transit Log<br /><br />' +
-                               '</strong><div id="ticker"></div><br />' +
-                               '<div id="clear"><strong>Click here to reset</strong></div></div>');
+            $(selector).append('<div id="tickerDiv"><span style="color:#800000"><strong>Transit Log</span>' +
+                               '<br /><br /></strong><div id="ticker"></div><br /><div id="tickerCtrl">' +
+                               '<span id="clear"><strong>Reset</strong></span> | ' +
+                               '<span id="stop"><strong>Stop logging</span></div></div>');
             var tickerDiv = selector + "> #tickerDiv";
             var ticker = tickerDiv + "> #ticker";
-            var clear = tickerDiv + "> #clear";
+            var tickerCtrl = tickerDiv + "> #tickerCtrl";
+            var clear = tickerCtrl + "> #clear";
+            var stop = tickerCtrl + "> #stop";
+            $(selector + "> #toggleLog").css('display', 'none');
 
             $(tickerDiv).css({
                 'position': 'absolute',
@@ -47,7 +74,7 @@ var transit = (function () {
                 'width': '40%',
                 'z-index': '99',
                 'background-color': 'hsl(0, 0%, 90%)',
-                'height': '35%',
+                'height': '38%',
                 '-webkit-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
                 '-moz-box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
                 'box-shadow': '0px 0px 8px rgba(0, 0, 0, 0.3)',
@@ -67,12 +94,18 @@ var transit = (function () {
                 'line-height': '150%'
             });
 
-            $(clear).css({
-                'cursor': 'pointer'
+            $(tickerCtrl).css({
+                'cursor': 'pointer',
+                'color': '#800000'
             });
 
             $(clear).click(function () {
                 $(ticker).html('');
+            });
+
+            $(stop).click(function () {
+                $(tickerDiv).remove();
+                $(selector + "> #toggleLog").css('display', 'inline');
             });
 
             $(tickerDiv).hover(function () {
@@ -716,13 +749,35 @@ var transit = (function () {
             }
         },
 
-        writeLog : function (selector, currentTime, htmlContent) {
+        writeLog : function (selector, currPosition, vehicle) {
             var tickerDiv = selector + "> #tickerDiv";
             var ticker = tickerDiv + "> #ticker";
 
+            if (!($(tickerDiv).length > 0) || !(currPosition.justReached ||
+                currPosition.justLeft || currPosition.started || currPosition.completed)) return;
+
             $(tickerDiv).show();
             $(tickerDiv).stop(true, true);
-            $(ticker).append('<em>' + currentTime + '</em> | ' + htmlContent + '<br />');
+
+            if (currPosition.justReached) {
+                $(ticker).append("<em>" + transit.currTime() + "</em> | " +
+                                 "<strong>" + vehicle.name + "</strong> just reached <strong>" +
+                                 currPosition.stationaryAt + "</strong>. " +
+                                 "Departs at: <strong>" + currPosition.departureTime + "</strong>.<br />");
+            } else if (currPosition.justLeft || currPosition.started) {
+                var sOrL = currPosition.started ? 'just started from' : 'just left';
+                $(ticker).append("<em>" + transit.currTime() + "</em> | " +
+                                 "<strong>" + vehicle.name + "</strong> " + sOrL + " <strong>" +
+                                 currPosition.stationaryAt + "</strong>. " +
+                                 "Next Stop: <strong>" + currPosition.approachingStop +
+                                 "</strong> at <strong>" + currPosition.approachTime + "</strong>.<br />");
+            } else if (currPosition.completed) {
+                $(ticker).append("<em>" + transit.currTime() + "</em> | " +
+                                 "<strong>" + vehicle.name +
+                                 "</strong> just reached its destination at <strong>" +
+                                 currPosition.stationaryAt + "</strong>.<br />");
+            }
+
             $(tickerDiv).css('display','inline');
             $(ticker).scrollTop($(ticker)[0].scrollHeight);
             $(tickerDiv).fadeOut(5000);
@@ -756,27 +811,8 @@ var transit = (function () {
                                     continue;
                                 }
 
-                                if (currPosition.justReached) {
-                                    transit.writeLog(selector, transit.currTime(),
-                                                     "<strong>" + vehicle.name +
-                                                     "</strong> just reached <strong>" +
-                                                     currPosition.stationaryAt + "</strong>. " +
-                                                     "Departs at: <strong>" + currPosition.departureTime +
-                                                     "</strong>." );
-                                } else if (currPosition.justLeft || currPosition.started) {
-                                    var sOrL = currPosition.started ? 'just started from' : 'just left';
-                                    transit.writeLog(selector, transit.currTime(),
-                                                     "<strong>" + vehicle.name +
-                                                     "</strong> " + sOrL + " <strong>" +
-                                                     currPosition.stationaryAt + "</strong>. " +
-                                                     "Next Stop: <strong>" + currPosition.approachingStop +
-                                                     "</strong> at <strong>" + currPosition.approachTime +
-                                                     "</strong>.");
-                                } else if (currPosition.completed) {
-                                    transit.writeLog(selector, transit.currTime(),
-                                                     "<strong>" + vehicle.name +
-                                                     "</strong> just reached its destination at <strong>" +
-                                                     currPosition.stationaryAt + "</strong>.");
+                                transit.writeLog(selector, currPosition, vehicle);
+                                if (currPosition.completed) {
                                     vehicle.markers[i].setMap(null);
                                     delete vehicle.markers[i];
                                 }
@@ -833,19 +869,19 @@ var transit = (function () {
         initialize : function (selector, localKmlFile, remoteKmlFile, jsonFile, refreshInterval) {
             refreshInterval = (typeof refreshInterval == "undefined" ||
                                refreshInterval < 1) ? 1000 : refreshInterval * 1000;
+            $(selector).css({
+                'position': 'relative',
+                'font-family': '"Lucida Grande", "Lucida Sans Unicode",' +
+                               'Verdana, Arial, Helvetica, sans-serif',
+                'font-size': '12px',
+                'text-shadow': 'hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px',
+                'background-color': 'hsl(0, 0%, 90%)'
+            });
+
+            $(selector).html("<div style='position:absolute;top:47%;right:45%;font-size:20px;'>" +
+                             "<strong>Initial Sizing...</strong></div>");
             google.maps.event.addDomListener(window, 'load',
                     function () {
-                        $(selector).css({
-                            'position': 'relative',
-                            'font-family': '"Lucida Grande", "Lucida Sans Unicode",' +
-                                           'Verdana, Arial, Helvetica, sans-serif',
-                            'font-size': '12px',
-                            'text-shadow': 'hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px',
-                            'background-color': 'hsl(0, 0%, 90%)'
-                        });
-
-                        $(selector).html("<div style='position:absolute;top:46%;right:46%;'>" +
-                                         "<strong>Initializing, et al...</strong></div>");
                         var kml = transit.kmlPromise(localKmlFile);
                         var json = transit.jsonPromise(jsonFile);
 
