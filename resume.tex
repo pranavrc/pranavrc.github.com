@@ -26,6 +26,7 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \definecolor{darkred}{RGB}{139 0 0}
+\renewcommand{\familydefault}{\sfdefault}
 
 \hypersetup{
     colorlinks = true,
@@ -33,7 +34,7 @@
 }
 
 \name{Pranav Ravichandran} % Your name
-\address{\textit{Gainesville, FL} \\ \textit{{\href{mailto:me@onloop.net}{me@onloop.net}}} \\ \textit{{\href{http://onloop.net}{http://onloop.net}}} \\ \textit{{\href{http://github.com/pranavrc}{http://github.com/pranavrc}}}} % Your phone number and email
+\address{Gainesville, FL \\ {\href{mailto:me@onloop.net}{me@onloop.net}} \\ {\href{http://onloop.net}{http://onloop.net}} \\ {\href{http://github.com/pranavrc}{http://github.com/pranavrc}}} % Your phone number and email
 
 \begin{document}
 
@@ -42,32 +43,18 @@
 %----------------------------------------------------------------------------------------
 
 \begin{rSection}{Education}
+\vspace{2mm}
 
 {\bf Anna University} \hfill {2009-2013} \\
 \textit{St. Joseph's College of Engineering, Electrical and Electronics Engineering Department}\\
-Bachelor of Engineering in Electrical and Electronics Engineering. CGPA: 7.44/10
+Bachelor of Engineering in Electrical and Electronics Engineering. GPA: 7.44/10.00
 
 {\bf {\href{http://onloop.net/hairyplotter/}{Thesis, Final year}}} \hfill {2013} \\
-\textit{Gestural interface with Electrooculogram-based eye gesture detection and classification.}
+Gestural interface with Electrooculogram-based eye gesture detection and classification.
 
-{\bf University of Florida} \hfill {Expected 2017 Grad} \\
+{\bf University of Florida} \hfill {Expected 2017} \\
 \textit{College of Engineering, Computer and Information Science and Engineering Department} \\
-Master of Science in Computer Science 
-
-\end{rSection}
-
-%----------------------------------------------------------------------------------------
-%	TECHNICAL STRENGTHS SECTION
-%----------------------------------------------------------------------------------------
-
-\begin{rSection}{Technical Strengths}
-
-\begin{tabular}{ @{} >{\bfseries}l @{\hspace{6ex}} l }
-Languages & Python, Lisp, JavaScript, C \\
-Tools \&Environment & Unix, Emacs, Bash, Git, Make/Cmake, Valgrind, Nginx, LaTeX \\
-The Web & HTML, CSS, Django, Node.js, jQuery, Backbone.js \\
-Databases & PostgreSQL, MongoDB
-\end{tabular}
+Master of Science in Computer Science. GPA: 4.00/4.00
 
 \end{rSection}
 
@@ -76,6 +63,7 @@ Databases & PostgreSQL, MongoDB
 %----------------------------------------------------------------------------------------
 
 \begin{rSection}{Experience}
+\vspace{2mm}
 
     \begin{rSubsection}{\href{https://www.google-melange.com/gsoc/project/details/google/gsoc2011/pranavrc/5757334940811264}{Google Summer of Code, Google}}{Apr - Sep 2011}{Student Developer}{Remote}
 \item Integrated SMARTS, a game AI library, into KDE Gluon, giving it the capabilities of a Behavior Tree system.
@@ -86,8 +74,8 @@ Databases & PostgreSQL, MongoDB
 
 \begin{rSubsection}{\href{https://happyfox.com/}{HappyFox, Tenmiles}}{Jan 2014 - May 2015}{Core Developer}{Chennai, India}
 \item Implemented features, enhancements and integrations for HappyFox, HappyFox Chat and related components.
-\item Developed a decoupled REST-based task-server with Celery and RabbitMQ, to handle deferred services.
-\item Created contextual search for knowledge base articles using Latent Semantic Analysis.
+\item Created a decoupled REST-based task-server with Celery and RabbitMQ, to handle deferred services.
+\item Introduced contextual search for knowledge base articles using Latent Semantic Analysis.
 \end{rSubsection}
 
 %------------------------------------------------
@@ -99,13 +87,14 @@ Databases & PostgreSQL, MongoDB
 %-------------------------------------------------
 
 \begin{rSection}{Open Source Contributions}
+\vspace{2mm}
 
 \begin{rSubsection}{\href{https://bugzilla.mozilla.org/user\%5Fprofile?user\%5Fid=431664}{Mozilla}}{2012-2013}{}{}
 Developed a code commenting and uncommenting feature for the Mozilla Firefox source editor, implemented W3C spec restrictions on WebIDL dictionary member types, and contributed other patches and fixes.
 \end{rSubsection}
 
 \begin{rSubsection}{\href{https://github.com/mdoege/PySynth/commits?author=pranavrc}{PySynth}}{July 2012}{}{}
-Created an interactive Command Line Interpreter to parse Musical Notation and render tunes on the fly, implemented multi-library support for audio playback, among other patches.
+Authored an interactive Command Line Interpreter to parse Musical Notation and render tunes on the fly, implemented multi-library support for audio playback, among other patches.
 \end{rSubsection}
 
 \end{rSection}
@@ -115,16 +104,44 @@ Created an interactive Command Line Interpreter to parse Musical Notation and re
 %--------------------------------------------------
 
 \begin{rSection}{{\href{http://github.com/pranavrc/}{Independent Projects}}}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\vspace{2mm}
 
 \item {\href{http://onloop.net/tenor/}{\bf Tenor}} A project to construct music theory and generate accessible music with Clojure and Overtone.
+\vspace{1mm}
+
 \item {\href{http://onloop.net/transit/}{\bf Transit.js}} An extensive JavaScript library to create purely client-side, interactive transit maps.
+\vspace{1mm}
+
 \item {\href{http://github.com/pranavrc/scrip/}{\bf Scrip}} A tiny domain-specific language described using Parsing Expression Grammar (PEG) to compute debts.
-\item {\href{http://u.onloop.net/}{\bf Suburl}} A substitution-based URL sanitizer that allows shortening individual parts of the URL separately.
+\vspace{1mm}
+
+\item {\href{http://u.onloop.net/}{\bf Suburl}} A substitution-based URL shortener that allows shortening individual parts of the URL separately.
+\vspace{1mm}
+
 \item {\href{http://this.onloop.net/}{\bf This.onloop}} Music search and album discovery tool using the Spotify Music API.
+\vspace{1mm}
+
 \item {\href{http://redd.it/1i7lh3}{\bf Howstat}} Resident player-statistics lookup bot for Reddit's Cricket Community, /r/Cricket.
 
 \end{rSection}
 
+%----------------------------------------------------------------------------------------
+%	TECHNICAL STRENGTHS SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{rSection}{Technical Strengths}
+\vspace{2mm}
+
+\begin{tabular}{ @{} >{\bfseries}l @{\hspace{6ex}} l }
+Languages & Python, Lisp, JavaScript, C \\
+Tools \& Environment & Unix, Vim, Bash, Git, Nginx, LaTeX \\
+The Web & HTML, CSS, Django, Node.js, jQuery, Backbone.js \\
+Databases & PostgreSQL, MongoDB
+\end{tabular}
+
+\end{rSection}
 
 \iffalse
 %-------------------------------------------------
