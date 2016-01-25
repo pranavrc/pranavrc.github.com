@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.1.24)  24 JAN 2016 18:42
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.1.24)  24 JAN 2016 18:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -302,7 +302,7 @@ Overfull \hbox (30.0pt too wide) in paragraph at lines 39--39
 
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <10> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 48.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 49.
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 146.
 [1
@@ -319,7 +319,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 146.
 Here is how much of TeX's memory you used:
  5757 strings out of 495028
  83499 string characters out of 6181497
- 174108 words of memory out of 5000000
+ 175108 words of memory out of 5000000
  8959 multiletter control sequences out of 15000+600000
  5195 words of font info for 19 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -328,10 +328,10 @@ Here is how much of TeX's memory you used:
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on resume.pdf (1 page, 51738 bytes).
+Output written on resume.pdf (1 page, 53140 bytes).
 PDF statistics:
- 44 PDF objects out of 1000 (max. 8388607)
- 36 compressed objects within 1 object stream
+ 47 PDF objects out of 1000 (max. 8388607)
+ 39 compressed objects within 1 object stream
  2 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
